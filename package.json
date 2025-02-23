@@ -1,0 +1,24 @@
+{
+  "name": "marcaCypressTest",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "cypress run",
+    "open": "cypress open",
+    "merge-reports": "mochawesome-merge cypress/reports/*.json > merged-report.json",
+    "generate-report": "marge merged-report.json --reportDir=cypress/reports --inline"
+
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^22.0.1",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.4",
+    "cypress": "^14.0.3",
+    "cypress-xpath": "^2.0.1",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0"
+  }
+}
