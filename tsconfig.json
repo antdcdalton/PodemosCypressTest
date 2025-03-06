@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "allowJs": true,
+    "strict": false,
+    "baseUrl": ".",
+    "types": ["@shelex/cypress-allure-plugin"],
+    "moduleResolution": "node",
+    "noEmit": true
+  },
+  "include": ["**/*.js", "**/*.ts", "**/*.feature"]
+}
+
