@@ -6,9 +6,22 @@ const { addCucumberPreprocessorPlugin } = require("@badeball/cypress-cucumber-pr
 
 module.exports = defineConfig({
   e2e: {
+   reporter: 'mochawesome',
+      reporterOptions: {
+        reportDir: 'cypress/reports',
+        overwrite: false,
+        html: true,
+        json: true
+      },
+      video: true,
+      videosFolder: 'cypress/videos',
+      screenshotsFolder: 'cypress/screenshots',
+      screenshotOnRunFailure: true,
+      pageLoadTimeout: 120000, // 120 segundos
     specPattern: "cypress/e2e/**/*.feature",
     supportFile: "cypress/support/e2e.js",
-    baseUrl: "https://www.marca.com/mx/",
+    stepDefinitions: "cypress/support/step_definitions",  // <--- añade esto
+    baseUrl: "https://podemos.mx/",
     env: {
       allure: true,
       allureResultsPath: 'allure-results'

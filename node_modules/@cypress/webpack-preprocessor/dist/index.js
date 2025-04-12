@@ -32,6 +32,63 @@ var path = __importStar(require("path"));
 var webpack_1 = __importDefault(require("webpack"));
 var utils_1 = __importDefault(require("./lib/utils"));
 var typescript_overrides_1 = require("./lib/typescript-overrides");
+var getTsLoaderIfExists = function (rules) {
+    var tsLoaderRule;
+    rules.some(function (rule) {
+        if (!rule.use && !rule.loader)
+            return false;
+        if (Array.isArray(rule.use)) {
+            var foundRule = rule.use.find(function (use) {
+                return use.loader && use.loader.includes('ts-loader');
+            });
+            /**
+             * If the rule is found, it will look like this:
+             * rules: [
+             *  {
+             *    test: /\.tsx?$/,
+             *    exclude: [/node_modules/],
+             *    use: [{
+             *      loader: 'ts-loader'
+             *    }]
+             *  }
+             * ]
+             */
+            tsLoaderRule = foundRule;
+            return tsLoaderRule;
+        }
+        if (lodash_1.default.isObject(rule.use) && rule.use.loader && rule.use.loader.includes('ts-loader')) {
+            /**
+             * If the rule is found, it will look like this:
+             * rules: [
+             *  {
+             *    test: /\.tsx?$/,
+             *    exclude: [/node_modules/],
+             *    use: {
+             *      loader: 'ts-loader'
+             *    }
+             *  }
+             * ]
+             */
+            tsLoaderRule = rule.use;
+            return tsLoaderRule;
+        }
+        tsLoaderRule = rules.find(function (rule) {
+            /**
+             * If the rule is found, it will look like this:
+             * rules: [
+             *  {
+             *    test: /\.tsx?$/,
+             *    exclude: [/node_modules/],
+             *    loader: 'ts-loader'
+             *  }
+             * ]
+             */
+            return rule.loader && rule.loader.includes('ts-loader');
+        });
+        return tsLoaderRule;
+    });
+    return tsLoaderRule;
+};
 var debug = (0, debug_1.default)('cypress:webpack');
 var debugStats = (0, debug_1.default)('cypress:webpack:stats');
 // bundle promises from input spec filename to output bundled file paths
@@ -155,6 +212,33 @@ var preprocessor = function (options) {
                 path: path.dirname(outputPath),
                 filename: path.basename(outputPath),
             },
+        })
+            .tap(function (opts) {
+            var _a, _b;
+            try {
+                var tsLoaderRule = getTsLoaderIfExists((_a = opts === null || opts === void 0 ? void 0 : opts.module) === null || _a === void 0 ? void 0 : _a.rules);
+                if (!tsLoaderRule) {
+                    debug('ts-loader not detected');
+                    return;
+                }
+                // FIXME: To prevent disruption, we are only passing in these 4 options to the ts-loader.
+                // We will be passing in the entire compilerOptions object from the tsconfig.json in Cypress 15.
+                // @see https://github.com/cypress-io/cypress/issues/29614#issuecomment-2722071332
+                // @see https://github.com/cypress-io/cypress/issues/31282
+                // Cypress ALWAYS wants sourceMap set to true, regardless of the user configuration.
+                // This is because we want to display a correct code frame in the test runner.
+                debug("ts-loader detected: overriding tsconfig to use sourceMap:true, inlineSourceMap:false, inlineSources:false, downlevelIteration:true");
+                tsLoaderRule.options = (tsLoaderRule === null || tsLoaderRule === void 0 ? void 0 : tsLoaderRule.options) || {};
+                tsLoaderRule.options.compilerOptions = ((_b = tsLoaderRule.options) === null || _b === void 0 ? void 0 : _b.compilerOptions) || {};
+                tsLoaderRule.options.compilerOptions.sourceMap = true;
+                tsLoaderRule.options.compilerOptions.inlineSourceMap = false;
+                tsLoaderRule.options.compilerOptions.inlineSources = false;
+                tsLoaderRule.options.compilerOptions.downlevelIteration = true;
+            }
+            catch (e) {
+                debug('ts-loader not detected', e);
+                return;
+            }
         })
             .tap(function (opts) {
             if (opts.devtool === false) {

@@ -1,38 +1,39 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Módulos instalados (se pueden reinstalar a partir de package.json)
+node_modules/
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
+# Archivos de configuración local o de entorno (ajustalos según tus necesidades)
+.env
+.env.local
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Carpetas y archivos de resultados de pruebas
+# Cypress genera videos y capturas de pantalla automáticamente al correr las pruebas
+cypress/videos/
+cypress/screenshots/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Allure: Resultados y reportes generados
+allure-results/
+allure-report/
 
-### VS Code ###
-.vscode/
+# Archivos y carpetas de logs (p. ej. archivos generados por CI o Jenkins)
+*.log
+logs/
 
-### Mac OS ###
+# Carpetas temporales y caches
+tmp/
+.cache/
+node_modules/.cache/
+
+# Si usas herramientas de empaquetado o compilación, ignora los artefactos generados
+/dist
+/build
+
+# Otros archivos que no son necesarios en el control de versiones
 .DS_Store
+Thumbs.db
+
+# Ignora archivos generados por tu IDE (por ejemplo, para IntelliJ)
+.idea/
+*.iml
+
+# Si usas Jenkins, normalmente la máquina de Jenkins tiene su propio workspace y archivos temporales,
+# así que no es necesario incluir archivos que Jenkins genere en el repositorio.
