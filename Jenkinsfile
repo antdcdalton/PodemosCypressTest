@@ -24,7 +24,8 @@ pipeline {
         }
         stage('Generate Allure Report') {
             steps {
-                sh 'npx allure generate allure-results -o allure-report --clean'
+                sh 'npx allure generate allure-results -o allure-report --clean',
+                 sh "allure:serve": "npx allure serve allure-results"
             }
         }
     }
