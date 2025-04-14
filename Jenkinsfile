@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        // Obtiene la instalación de Node.js configurada en Jenkins (el nombre debe coincidir con el que definiste en Global Tool Configuration)
+        // Obtiene la instalación de Node.js configurada en Jenkins
         NODEJS_HOME = tool 'nodejs'
         // Actualiza el PATH para que incluya el directorio bin de Node.js
         PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
@@ -24,8 +24,8 @@ pipeline {
         }
         stage('Generate Allure Report') {
             steps {
-                sh 'npx allure generate allure-results -o allure-report --clean',
-                 sh 'npx allure serve allure-results'
+                sh 'npx allure generate allure-results -o allure-report --clean'
+                sh 'npx allure serve allure-results'
             }
         }
     }
